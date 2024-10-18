@@ -10,7 +10,6 @@ import axios from "axios";
 import CommentBox from "../comments/CommentBox";
 import CommentCard from "../comments/CommentCard";
 
-
 interface PostProps {
   selectedFilter: string;
   searchResults: any[];
@@ -92,14 +91,13 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
       setPostsLoading(false);
     } else {
       // Fetch posts normally if no search results
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`)
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`)
         .then((response) => {
-          if (!response.ok) {
+          if (!response.status) {
             throw new Error("Failed to fetch posts");
           }
-          return response.json();
+          setPosts(response.data.posts)
         })
-        .then((data) => setPosts(data.posts))
         .catch((error) => setError(error.message))
         .finally(() => setPostsLoading(false));
     }
