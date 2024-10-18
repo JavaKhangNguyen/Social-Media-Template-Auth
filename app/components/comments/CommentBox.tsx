@@ -53,24 +53,23 @@ const CommentBox: React.FC<CommentBoxProps> = ({ postId, onNewComment }) => {
     };
   
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comments/add`, {
-        method: "POST",
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/comments/add`, newComment, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newComment),
-      });
+      });  
+      // Handle successful response
+      onNewComment(response.data);
+      console.log("Comment successfully added:", response.data);
   
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error submitting comment:", errorData);
-      } else {
-        const data = await response.json();
-        onNewComment(data);
-        console.log("Comment successfully added:", data);
-      }
     } catch (error) {
-      console.error("Network or server error:", error);
+      if (error.response) {
+        console.error("Error submitting comment:", error.response.data);
+      } else if (error.request) {
+        console.error("Network error:", error.request);
+      } else {
+        console.error("Error:", error.message);
+      }
     }
   
     setComment(""); // Clear the textarea after submission
