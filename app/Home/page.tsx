@@ -24,16 +24,11 @@ const Page: React.FC = () => {
   return (
     <>
       <Navbar selectedFilter={selectedFilter} onFilterSelect={handleFilterSelect} onSearchResults={handleSearchResults}/>
-      {/* Left Sidebar starts here */}
       <div className="mainContainer">
         <LeftSidebar />
-        {/* Left Sidebar ends here */}
-
         <div className="mainSection">
-          {/* Posts section*/}
           <Post selectedFilter={selectedFilter} searchResults={searchResults} />
         </div>
-        {/* Right sidebar*/}
         <RightSidebar />
       </div>
     </>

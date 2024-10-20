@@ -14,19 +14,19 @@ const CommentBox: React.FC<CommentBoxProps> = ({ postId, onNewComment }) => {
   const [comment, setComment] = useState('');
   const {authUser, setAuthUser} = useAuthStore();
 
-  // Borrow the userid from the API directly because Clerk handle user ID differently
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/20`);
-        if (!response.status) {
-          throw new Error("Failed to fetch user");
-        }
-        setAuthUser(response.data); 
-      } catch (error) {
-        console.error(error.message);
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/20`);
+      if (!response.status) {
+        throw new Error("Failed to fetch user");
       }
-    };
+      setAuthUser(response.data); 
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  
+  useEffect(() => {
     fetchUser();
   }, [setAuthUser]);
 

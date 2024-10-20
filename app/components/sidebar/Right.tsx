@@ -10,18 +10,18 @@ const RightSidebar: React.FC = () => {
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // Loading state
 
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+      setUsers(response.data.users); // Assuming response has a 'users' property
+      setLoading(false); // Set loading to false after fetching users
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      setLoading(false); // Also set loading to false on error
+    }
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
-        setUsers(response.data.users); // Assuming response has a 'users' property
-        setLoading(false); // Set loading to false after fetching users
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setLoading(false); // Also set loading to false on error
-      }
-    };
-  
     fetchUsers();
   }, []); // Empty dependency array to fetch users only once
 

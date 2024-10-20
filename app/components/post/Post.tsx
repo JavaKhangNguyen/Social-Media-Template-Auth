@@ -43,44 +43,45 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
   };
  
   // Fetch posts and users concurrently
-  useEffect(() => {
-    const fetchPostsAndUsers = async () => {
-      try {
-        const postsResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
-        if (postsResponse.status !== 200) {
-          throw new Error("Failed to fetch posts");
-        }
-        const postsData = postsResponse.data
-        setPosts(postsData.posts);
-
-        const uniqueUserIds = [
-          ...new Set(postsData.posts.map((post) => post.userId)),
-        ];
-        const userPromises = uniqueUserIds.map((userId) =>
-          axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`).then(
-            (res) => {
-              if (res.status !== 200) {
-                throw new Error(`Failed to fetch user with ID: ${userId}`);
-              }
-              return res.data;
-            }
-          )
-        );
-
-        const userData = await Promise.all(userPromises);
-        const userMap = userData.reduce((acc, user) => {
-          acc[user.id] = user;
-          return acc;
-        }, {});
-        setUsers(userMap);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setPostsLoading(false);
-        setUsersLoading(false);
+  const fetchPostsAndUsers = async () => {
+    try {
+      const postsResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
+      if (postsResponse.status !== 200) {
+        throw new Error("Failed to fetch posts");
       }
-    };
+      const postsData = postsResponse.data
+      setPosts(postsData.posts);
 
+      const uniqueUserIds = [
+        ...new Set(postsData.posts.map((post) => post.userId)),
+      ];
+      const userPromises = uniqueUserIds.map((userId) =>
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`).then(
+          (res) => {
+            if (res.status !== 200) {
+              throw new Error(`Failed to fetch user with ID: ${userId}`);
+            }
+            return res.data;
+          }
+        )
+      );
+
+      const userData = await Promise.all(userPromises);
+      const userMap = userData.reduce((acc, user) => {
+        acc[user.id] = user;
+        return acc;
+      }, {});
+      setUsers(userMap);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setPostsLoading(false);
+      setUsersLoading(false);
+    }
+  };
+
+  
+  useEffect(() => {
     fetchPostsAndUsers();
   }, []);
 
