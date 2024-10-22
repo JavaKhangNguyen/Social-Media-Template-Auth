@@ -12,8 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import axios from "axios";
-
-// Define types for post data
+import Image from "next/image";
 interface Post {
   id: number;
   title: string;
@@ -39,44 +38,31 @@ const Navbar: React.FC<NavbarProps> = ({ selectedFilter, onFilterSelect, onSearc
   const [searchValue, setSearchValue] = useState<string>("");
   const [ProfileMenu, setProfileMenu] = useState<boolean>(false);
   const [searchPanel, setSearchPanel] = useState<boolean>(false);
-
-  // Setup for menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  
-  // Define filter options
   const filterOptions = ["All", "Most comments", "Most views", "Most likes"];
-    
-  // Handle opening and closing the menu
   const handleFilterClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  // Grab the authUser
   const { user } = useUser();
-
-  // Grab the signOut and openUserProfile methods
   const { signOut, openUserProfile } = useClerk()
-
-  // Search for posts based on searchValue and trigger search on Enter key press
   const searchPosts = (value: string): void => {
     if (value.trim() === "") return;
-
     axios.get(`https://dummyjson.com/posts/search?q=${value}`)
       .then((res) => res.data)
       .then((data) => {
         if (data.posts) {
-          onSearchResults(data.posts); // Pass the search results back to the parent
+          onSearchResults(data.posts);
         } else {
-          onSearchResults([]); // If no posts found, pass an empty array
+          onSearchResults([]); 
         }
       })
       .catch((err) => {
         console.error("Error fetching posts:", err);
-        onSearchResults([]); // If an error occurs, pass an empty array
+        onSearchResults([]);
       });
   };
 
@@ -162,7 +148,7 @@ const Navbar: React.FC<NavbarProps> = ({ selectedFilter, onFilterSelect, onSearc
               className="userImage"
               onClick={() => setProfileMenu(!ProfileMenu)}
             >
-              <img
+              <Image
                 src={user?.imageUrl}
                 alt="User Profile Pic"
               />
@@ -179,7 +165,7 @@ const Navbar: React.FC<NavbarProps> = ({ selectedFilter, onFilterSelect, onSearc
               transition={{ duration: 0.48 }}
             >
               <div className="profileWrapper">
-                <img src={user?.imageUrl} alt="User Profile Pic" />
+                <Image src={user?.imageUrl} alt="User Profile Pic" />
                 <div className="profileData">
                   <button className="font-semibold text-gray-900 hover:text-[#8043cc] transition-colors duration-300" onClick={() => openUserProfile()}>{user?.firstName} {user?.lastName}</button>
                 </div>

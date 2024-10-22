@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import axios from "axios";
-
+import Image from "next/image";
 import CommentBox from "../comments/CommentBox";
 import CommentCard from "../comments/CommentCard";
 
@@ -65,7 +65,6 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
           }
         )
       );
-
       const userData = await Promise.all(userPromises);
       const userMap = userData.reduce((acc, user) => {
         acc[user.id] = user;
@@ -88,10 +87,9 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
   // Search posts
   useEffect(() => {
     if (searchResults.length > 0) {
-      setPosts(searchResults); // If there are search results, show them
+      setPosts(searchResults); 
       setPostsLoading(false);
     } else {
-      // Fetch posts normally if no search results
       axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`)
         .then((response) => {
           if (!response.status) {
@@ -117,7 +115,6 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
       .catch((error) => setError(error.message));
   }, []);
 
-  // Sorting logic based on filter with memoization
   const sortedPosts = useMemo(() => {
     switch (selectedFilter) {
       case "Most views":
@@ -135,7 +132,6 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
     }
   }, [selectedFilter, posts, comments]);
 
-  // Show error message if any fetch failed
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen text-red-600">
@@ -144,7 +140,6 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
     );
   }
 
-  // Show loading spinner while either posts or users are still loading
   if (postsLoading || usersLoading ) {
     return (
       <div className="flex justify-center items-center h-screen text-purple-600">
@@ -171,7 +166,7 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
           <div className="flex items-center mb-4">
-            <img
+            <Image
               src={
                 users[post.userId]?.image || `https://via.placeholder.com/50`
               }
@@ -242,7 +237,7 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
       <Snackbar
         open={isOpen}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        autoHideDuration={3000} // Increased to 3000ms
+        autoHideDuration={3000}
         onClose={handleClose}
       >
         <Alert severity="success" variant="filled" sx={{ width: "100%" }}>

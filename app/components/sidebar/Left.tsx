@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faBookBookmark, faHome } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
 import { useUser } from "@clerk/nextjs";
-
+import Image from "next/image";
 const links = [
   {
     name: "Home",
@@ -22,12 +22,10 @@ const links = [
 
 const LeftSidebar: React.FC = () => {
   const {user} = useUser();
-
   const containerVariants = {
     hidden: { opacity: 0, x: -100 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
   };
-
   const itemVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
@@ -42,7 +40,7 @@ const LeftSidebar: React.FC = () => {
     >
       <motion.div className="userProfileWidget" variants={itemVariants}>
         <div className="profileImage">
-          <img src={user?.imageUrl} alt="" />
+          <Image src={user?.imageUrl} alt="" />
         </div>
         <div className="userDetails">
           <div className="font-semibold text-gray-900 hover:text-[#8043cc] transition-colors duration-300">

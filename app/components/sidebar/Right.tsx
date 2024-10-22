@@ -2,32 +2,30 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
-import { motion } from "framer-motion"; // Ensure framer-motion is installed
+import { motion } from "framer-motion"; 
 import axios from "axios";
-
+import Image from "next/image";
 const RightSidebar: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
-
+  const [loading, setLoading] = useState<boolean>(true);
   const fetchUsers = async () => {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
-      setUsers(response.data.users); // Assuming response has a 'users' property
-      setLoading(false); // Set loading to false after fetching users
-    } catch (error) {
+      setUsers(response.data.users); 
+      setLoading(false);
+    } 
+    catch (error) {
       console.error("Error fetching user data:", error);
-      setLoading(false); // Also set loading to false on error
     }
   };
 
   useEffect(() => {
     fetchUsers();
-  }, []); // Empty dependency array to fetch users only once
+  }, []); 
 
   useEffect(() => {
     if (users.length > 0 && selectedUsers.length === 0) {
-      // Randomly select 3 users only if none have been selected yet
       const randomUsers = [];
       while (randomUsers.length < 3) {
         const randomIndex = Math.floor(Math.random() * users.length);
@@ -38,7 +36,7 @@ const RightSidebar: React.FC = () => {
       }
       setSelectedUsers(randomUsers);
     }
-  }, [users]); // Only runs when users are fetched
+  }, [users]); 
 
   // Loading spinner component
   if (loading) {
@@ -64,7 +62,7 @@ const RightSidebar: React.FC = () => {
             <div key={user.id} className="requestProfile">
               <div className="details">
                 <div className="profileImage">
-                  <img src={user.image} alt={user.firstName} />
+                  <Image src={user.image} alt={user.firstName} />
                 </div>
                 <div className="userDetails">
                   <div className="name">
@@ -80,7 +78,7 @@ const RightSidebar: React.FC = () => {
             </div>
           ))
         ) : (
-          <p>No users available.</p> // Fallback if no users are found
+          <p>No users available.</p> 
         )}
       </div>
     </div>
