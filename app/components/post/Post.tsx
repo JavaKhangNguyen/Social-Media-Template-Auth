@@ -43,53 +43,54 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
   };
  
   // Fetch posts and users concurrently
-  const fetchPostsAndUsers = async () => {
-    try {
-      const postsResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
-      if (postsResponse.status !== 200) {
-        throw new Error("Failed to fetch posts");
-      }
-      const postsData = postsResponse.data
-      setPosts(postsData.posts);
-
-      const uniqueUserIds = [
-        ...new Set(postsData.posts.map((post) => post.userId)),
-      ];
-      const userPromises = uniqueUserIds.map((userId) =>
-        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`).then(
-          (res) => {
-            if (res.status !== 200) {
-              throw new Error(`Failed to fetch user with ID: ${userId}`);
-            }
-            return res.data;
-          }
-        )
-      );
-      const userData = await Promise.all(userPromises);
-      const userMap = userData.reduce((acc, user) => {
-        acc[user.id] = user;
-        return acc;
-      }, {});
-      setUsers(userMap);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setPostsLoading(false);
-      setUsersLoading(false);
-    }
-  };
-
-  
   useEffect(() => {
+    const fetchPostsAndUsers = async () => {
+      try {
+        const postsResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
+        if (postsResponse.status !== 200) {
+          throw new Error("Failed to fetch posts");
+        }
+        const postsData = postsResponse.data
+        setPosts(postsData.posts);
+
+        const uniqueUserIds = [
+          ...new Set(postsData.posts.map((post) => post.userId)),
+        ];
+        const userPromises = uniqueUserIds.map((userId) =>
+          axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`).then(
+            (res) => {
+              if (res.status !== 200) {
+                throw new Error(`Failed to fetch user with ID: ${userId}`);
+              }
+              return res.data;
+            }
+          )
+        );
+
+        const userData = await Promise.all(userPromises);
+        const userMap = userData.reduce((acc, user) => {
+          acc[user.id] = user;
+          return acc;
+        }, {});
+        setUsers(userMap);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setPostsLoading(false);
+        setUsersLoading(false);
+      }
+    };
+
     fetchPostsAndUsers();
   }, []);
 
   // Search posts
   useEffect(() => {
     if (searchResults.length > 0) {
-      setPosts(searchResults); 
+      setPosts(searchResults); // If there are search results, show them
       setPostsLoading(false);
     } else {
+      // Fetch posts normally if no search results
       axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`)
         .then((response) => {
           if (!response.status) {
@@ -102,7 +103,6 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
     }
   }, [searchResults]);
 
-  // Fetch comments
   useEffect(() => {
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/comments?limit=0`)
       .then((response) => {
@@ -166,7 +166,7 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
           <div className="flex items-center mb-4">
-            <Image
+            <img
               src={
                 users[post.userId]?.image || `https://via.placeholder.com/50`
               }
@@ -237,7 +237,7 @@ const Post: React.FC<PostProps> = ({ selectedFilter, searchResults }) => {
       <Snackbar
         open={isOpen}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        autoHideDuration={3000}
+        autoHideDuration={3000} 
         onClose={handleClose}
       >
         <Alert severity="success" variant="filled" sx={{ width: "100%" }}>

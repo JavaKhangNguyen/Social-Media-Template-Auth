@@ -6,17 +6,11 @@ import LeftSidebar from "../components/sidebar/Left";
 import RightSidebar from "../components/sidebar/Right";
 
 const Page: React.FC = () => {
-  // State for managing selected filter
   const [selectedFilter, setSelectedFilter] = useState<string>("All");
-
-  // State for searching
   const [searchResults, setSearchResults] = useState([]);
-
-  // Function to update the selected filter
   const handleFilterSelect = (filter: string) => {
     setSelectedFilter(filter);
   }
-
   const handleSearchResults = (results: []) => {
     setSearchResults(results);
   }

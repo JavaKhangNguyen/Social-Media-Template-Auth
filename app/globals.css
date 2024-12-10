@@ -23,8 +23,8 @@ body {
   padding: 1rem;
 }
 
-.inNavbar .inLogo {
-  @apply text-2xl font-semibold text-purple-600 cursor-pointer hover:text-primary transition-colors duration-300;
+.navLogo {
+  @apply text-2xl font-semibold text-purple-600;
 }
 
 .inSearch {

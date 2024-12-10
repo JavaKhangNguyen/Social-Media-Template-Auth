@@ -5,22 +5,23 @@ import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion"; 
 import axios from "axios";
 import Image from "next/image";
+
 const RightSidebar: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
-      setUsers(response.data.users); 
-      setLoading(false);
-    } 
-    catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+        setUsers(response.data.users); 
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setLoading(false); 
+      }
+    };
     fetchUsers();
   }, []); 
 
@@ -38,7 +39,6 @@ const RightSidebar: React.FC = () => {
     }
   }, [users]); 
 
-  // Loading spinner component
   if (loading) {
     return (
       <div className="flex justify-center items-center h-full text-purple-600">
@@ -62,7 +62,7 @@ const RightSidebar: React.FC = () => {
             <div key={user.id} className="requestProfile">
               <div className="details">
                 <div className="profileImage">
-                  <Image src={user.image} alt={user.firstName} />
+                  <img src={user.image} alt={user.firstName} />
                 </div>
                 <div className="userDetails">
                   <div className="name">
@@ -78,7 +78,7 @@ const RightSidebar: React.FC = () => {
             </div>
           ))
         ) : (
-          <p>No users available.</p> 
+          <p>No users available.</p>
         )}
       </div>
     </div>

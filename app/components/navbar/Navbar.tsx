@@ -13,18 +13,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import axios from "axios";
 import Image from "next/image";
-interface Post {
-  id: number;
-  title: string;
-  body: string;
-  reactions: {
-    likes: number;
-    dislikes: number;
-  };
-  views: number;
-  tags: string[];
-  userId: number;
-}
 
 interface NavbarProps {
   selectedFilter: string;
@@ -51,11 +39,12 @@ const Navbar: React.FC<NavbarProps> = ({ selectedFilter, onFilterSelect, onSearc
   const { signOut, openUserProfile } = useClerk()
   const searchPosts = (value: string): void => {
     if (value.trim() === "") return;
+
     axios.get(`https://dummyjson.com/posts/search?q=${value}`)
       .then((res) => res.data)
       .then((data) => {
         if (data.posts) {
-          onSearchResults(data.posts);
+          onSearchResults(data.posts); 
         } else {
           onSearchResults([]); 
         }
@@ -87,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({ selectedFilter, onFilterSelect, onSearc
   return (
     <>
       <div className="inNavbar">
-        <Link href={"/"} className="inLogo">
+        <Link href={"/"} className="navLogo">
           Nguyen Phuc Khang
         </Link>
         <div ref={ref} className={`inSearch ${isFocused ? "inSearchFocused" : ""}`}>
@@ -97,6 +86,7 @@ const Navbar: React.FC<NavbarProps> = ({ selectedFilter, onFilterSelect, onSearc
             </div>
             <input
               type="text"
+              data-testid="search-input"
               onClick={() => setIsFocused(true)}
               placeholder="Search"
               value={searchValue}
@@ -148,7 +138,7 @@ const Navbar: React.FC<NavbarProps> = ({ selectedFilter, onFilterSelect, onSearc
               className="userImage"
               onClick={() => setProfileMenu(!ProfileMenu)}
             >
-              <Image
+              <img
                 src={user?.imageUrl}
                 alt="User Profile Pic"
               />
@@ -165,7 +155,7 @@ const Navbar: React.FC<NavbarProps> = ({ selectedFilter, onFilterSelect, onSearc
               transition={{ duration: 0.48 }}
             >
               <div className="profileWrapper">
-                <Image src={user?.imageUrl} alt="User Profile Pic" />
+                <img src={user?.imageUrl} alt="User Profile Pic" />
                 <div className="profileData">
                   <button className="font-semibold text-gray-900 hover:text-[#8043cc] transition-colors duration-300" onClick={() => openUserProfile()}>{user?.firstName} {user?.lastName}</button>
                 </div>

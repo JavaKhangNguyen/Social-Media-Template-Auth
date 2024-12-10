@@ -14,19 +14,18 @@ const CommentBox: React.FC<CommentBoxProps> = ({ postId, onNewComment }) => {
   const [comment, setComment] = useState('');
   const {authUser, setAuthUser} = useAuthStore();
 
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/20`);
-      if (!response.status) {
-        throw new Error("Failed to fetch user");
-      }
-      setAuthUser(response.data); 
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-  
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/20`);
+        if (!response.status) {
+          throw new Error("Failed to fetch user");
+        }
+        setAuthUser(response.data); 
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
     fetchUser();
   }, [setAuthUser]);
 
@@ -38,7 +37,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ postId, onNewComment }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault(); 
-      handleCommentSubmit(); // Trigger the comment submission
+      handleCommentSubmit();
     }
   };
 
@@ -72,7 +71,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ postId, onNewComment }) => {
       }
     }
   
-    setComment(""); // Clear the textarea after submission
+    setComment(""); 
   };
 
   return (

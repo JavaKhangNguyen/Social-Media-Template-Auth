@@ -1,7 +1,7 @@
 "use client"
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import Image from 'next/image';
+
 interface CommentCardProps {
   comment: {
     id: number;
@@ -26,7 +26,7 @@ const CommentCard: React.FC<CommentCardProps> = ({ comment }) => {
   return (
     <>
     <div className="commentCard">
-      <Image
+      <img
         src={userImage}
         className="avatar"
       />
